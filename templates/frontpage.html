@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Todos</title>
+        <meta charset="utf-8">
+    </head>
+    <body lang="en">
+        <h1>Todos</h1>
+
+        {% if is_logged_in %}
+        <!-- TODO: log out -->
+        {% else %}
+        <a href="/login">Log in</a>
+        {% endif %}
+
+        {% if is_logged_in %}
+        <b>My todos:</b>
+        <ul>
+            {% for item in todos %}
+            <li>{{ item.content }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </body>
+</html>

