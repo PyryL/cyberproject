@@ -1,0 +1,12 @@
+
+CREATE TABLE Users (
+    id INTEGER PRIMARY KEY NOT NULL,
+    username TEXT UNIQUE NOT NULL,
+    passwd TEXT NOT NULL
+);
+
+CREATE TABLE Todos (
+    id INTEGER PRIMARY KEY NOT NULL,
+    user INTEGER REFERENCES Users(id) NOT NULL,
+    content TEXT NOT NULL
+);
