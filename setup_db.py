@@ -1,6 +1,7 @@
 import sqlite3
 import os
 import hashlib
+from utilities.hash import generate_hash
 
 # clear any existing database
 try:
@@ -17,10 +18,9 @@ with open("schema.sql", "r") as file:
     cursor.executescript(file.read())
 
 # insert example users
-hash = lambda s : hashlib.md5(s.encode("utf-8")).hexdigest()
 users = [
-    ("janedoe", hash("password")),
-    ("johndoe", hash("secret")),
+    ("janedoe", generate_hash("password"), ),
+    ("johndoe", generate_hash("secret"), ),
 ]
 cursor.executemany("INSERT INTO Users (username, passwd) VALUES (?, ?)", users)
 
