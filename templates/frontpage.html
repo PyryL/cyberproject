@@ -17,7 +17,7 @@
         <b>My todos:</b>
         <ul>
             {% for item in todos %}
-            <li>{{ item.content }}</li>
+            <li>{{ item.content }} <a href="/delete/{{ item.id }}">Delete</a></li>
             {% endfor %}
         </ul>
         {% endif %}

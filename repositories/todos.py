@@ -16,3 +16,19 @@ class Todos:
             { "id": item[0], "content": item[1] }
             for item in result
         ]
+
+    @classmethod
+    def get_todo_user_id(cls, todo_id: int) -> int:
+        cursor = connection.cursor()
+        sql = "SELECT user FROM Todos WHERE id=?"
+        result = cursor.execute(sql, (todo_id, )).fetchone()
+        if result is None:
+            return None
+        return result[0]
+
+    @classmethod
+    def delete_todo(cls, todo_id: int):
+        cursor = connection.cursor()
+        sql = "DELETE FROM Todos WHERE id=?"
+        cursor.execute(sql, (todo_id, ))
+        connection.commit()

@@ -1,4 +1,4 @@
-from flask import request, render_template
+from flask import request, render_template, abort, redirect
 from app import app
 from repositories.todos import Todos
 from utilities.session import Session
@@ -14,7 +14,7 @@ def frontpage():
         html += "<b>My todos:</b><ul>"
         for item in user_todos:
             # this allows injecting HTML code unsanitized to the webpage
-            html += "<li>" + item["content"] + "</li>"
+            html += f'<li>{item["content"]} <a href="/delete/{item["id"]}">Delete</a></li>'
         html += "</ul>"
     else:
         html += '<a href="/login">Log in</a>'
@@ -24,3 +24,20 @@ def frontpage():
     # return render_template("frontpage.html",
     #     is_logged_in=user_id is not None,
     #     todos=user_todos)
+
+@app.route("/delete/<todo_id>")
+def deleteTodo(todo_id: int):
+    # check that user is logged in
+    user_id = Session.check_user_id(request)
+    if user_id is None:
+        return abort(401)
+
+    # check that user is the owner of this todo
+    todo_owner_id = Todos.get_todo_user_id(todo_id)
+    if todo_owner_id is None:
+        return abort(404)
+    if str(todo_owner_id) != str(user_id):
+        return abort(403)
+
+    Todos.delete_todo(todo_id)
+    return redirect("/")
