@@ -4,6 +4,7 @@ from utilities.hash import generate_hash, check_hash
 class Users:
     @classmethod
     def create_new_user(cls, username: str, password: str):
+        """Adds a new user to database. Returns False if username already exists, True otherwise."""
         cursor = connection.cursor()
 
         # check for duplicate username
@@ -19,6 +20,7 @@ class Users:
 
     @classmethod
     def validate_credentials(cls, username: str, password: str) -> int:
+        """Returns the user ID of the user if given credentials are correct, None otherwise."""
         cursor = connection.cursor()
         sql = "SELECT id, passwd FROM Users WHERE username=?"
         result = cursor.execute(sql, (username, )).fetchone()

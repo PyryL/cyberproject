@@ -3,6 +3,8 @@ from db import connection
 class Todos:
     @classmethod
     def get_user_todos(cls, user_id: int) -> list:
+        """Returns the todos owned by the given user as a list of { id, content } dicts."""
+
         cursor = connection.cursor()
         # INTENTIONAL VULNERABILITY
         # inserting the parameter to the statement ourselves makes SQL injections possible
@@ -19,6 +21,7 @@ class Todos:
 
     @classmethod
     def get_todo_user_id(cls, todo_id: int) -> int:
+        """Returns the user ID of the owner of the given todo, or None if not found."""
         cursor = connection.cursor()
         sql = "SELECT user FROM Todos WHERE id=?"
         result = cursor.execute(sql, (todo_id, )).fetchone()
@@ -28,6 +31,7 @@ class Todos:
 
     @classmethod
     def add_todo(cls, content: str, user_id: int):
+        """Adds a new todo to database."""
         cursor = connection.cursor()
         sql = "INSERT INTO Todos (user, content) VALUES (?, ?)"
         cursor.execute(sql, (user_id, content, ))
@@ -35,6 +39,7 @@ class Todos:
 
     @classmethod
     def delete_todo(cls, todo_id: int):
+        """Deletes the given todo from database."""
         cursor = connection.cursor()
         sql = "DELETE FROM Todos WHERE id=?"
         cursor.execute(sql, (todo_id, ))
