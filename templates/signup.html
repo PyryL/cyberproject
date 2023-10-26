@@ -6,6 +6,15 @@
     </head>
     <body lang="en">
         <h1>Sign up</h1>
+        {% if status == "mismatch" %}
+        <p style="color:red">Passwords don't match!</p>
+        {% elif status == "duplicate" %}
+        <p style="color:red">Username is already taken. Please choose another username.</p>
+        {% elif status == "username" %}
+        <p style="color:red">Username must be 3-12 characters long and only contain letters, digits and underscores.</p>
+        {% elif status == "weak" %}
+        <p style="color:red">Weak password! It must contain at least one lower and upper case character, number and special character. It is required to be at least 8 characters long.</p>
+        {% endif %}
         <p><a href="/">Back to front page</a></p>
         <p><a href="/login">Log in</a></p>
         <form action="/signup" method="POST">

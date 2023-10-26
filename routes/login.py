@@ -4,7 +4,7 @@ from repositories.users import Users
 
 @app.route("/login")
 def getLogin():
-    return render_template("login.html")
+    return render_template("login.html", status=request.args.get("status"))
 
 @app.route("/login", methods=["POST"])
 def postLogin():

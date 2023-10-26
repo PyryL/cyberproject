@@ -5,7 +5,7 @@ from utilities.validation import Validation
 
 @app.route("/signup")
 def getSignup():
-    return render_template("signup.html")
+    return render_template("signup.html", status=request.args.get("status"))
 
 @app.route("/signup", methods=["POST"])
 def postSignup():
@@ -18,10 +18,12 @@ def postSignup():
     # INTENTIONAL VULNERABILITY
     # no further checks are made to the user input
     # FIX (uncomment the code block below)
-    # if not Validation.is_valid_username(username) or not Validation.is_valid_password(password1):
+    # if not Validation.is_valid_username(username):
+    #     return redirect("/signup?status=username")
+    # if not Validation.is_valid_password(password1):
     #     return redirect("/signup?status=weak")
 
     if not Users.create_new_user(username, password1):
-        return redirect("/signup?status=username")
+        return redirect("/signup?status=duplicate")
 
     return redirect("/login?status=signup")
