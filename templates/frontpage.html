@@ -18,10 +18,17 @@
         <b>My todos:</b>
         <ul>
             {% for item in todos %}
-            <li>{{ item.content }} <a href="/delete/{{ item.id }}">Delete</a></li>
+            <li>
+                {{ item.content }}
+                <form action="/delete/{{ item.id }}" method="POST" style="display:inline">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </li>
             {% endfor %}
             <li>
                 <form action="/add-todo" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <input name="content" placeholder="New todo">
                     <input type="submit" value="Add">
                 </form>

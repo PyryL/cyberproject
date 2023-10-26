@@ -16,8 +16,11 @@ def frontpage():
         html += "<b>My todos:</b><ul>"
         for item in user_todos:
             # this allows injecting HTML code unsanitized to the webpage
-            html += f'<li>{item["content"]} <a href="/delete/{item["id"]}">Delete</a></li>'
+            html += f'<li>{item["content"]} <form action="/delete/{item["id"]}" method="POST" style="display:inline">'
+            html += f'<input type="hidden" name="csrf_token" value="{Session.csrf_token()}">'
+            html += f'<input type="submit" value="Delete"></form></li>'
         html += '<li><form action="/add-todo" method="POST"><input name="content" placeholder="New todo">'
+        html += f'<input type="hidden" name="csrf_token" value="{Session.csrf_token()}">'
         html += '<input type="submit" value="Add"></form></li>'
         html += "</ul>"
     else:
@@ -27,12 +30,13 @@ def frontpage():
     # use Jinja framework that automatically sanitizes all input
     # return render_template("frontpage.html",
     #     is_logged_in=user_id is not None,
-    #     todos=user_todos)
+    #     todos=user_todos,
+    #     csrf_token=Session.csrf_token())
 
 @app.route("/add-todo", methods=["POST"])
 def addTodo():
     user_id = Session.check_user_id(request)
-    if user_id is None:
+    if user_id is None or request.form.get("csrf_token") != Session.csrf_token():
         return abort(401)
 
     content = request.form.get("content")
@@ -42,11 +46,11 @@ def addTodo():
     Todos.add_todo(content, user_id)
     return redirect("/")
 
-@app.route("/delete/<todo_id>")
+@app.route("/delete/<todo_id>", methods=["POST"])
 def deleteTodo(todo_id: int):
     # check that user is logged in
     user_id = Session.check_user_id(request)
-    if user_id is None:
+    if user_id is None or request.form.get("csrf_token") != Session.csrf_token():
         return abort(401)
 
     # check that user is the owner of this todo

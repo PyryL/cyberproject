@@ -16,7 +16,7 @@ def postLogin():
     # INTENTIONAL VULNERABILITY
     # user_id is stored plaintext in a cookie
     response = make_response(redirect("/"))
-    response.set_cookie("session", str(user_id))
+    response.set_cookie("user_id", str(user_id))
     return response
     # FIX (comment vulnerable code above and uncomment this block)
     # store user_id in encrypted session that cannot be tampered by the user
@@ -26,8 +26,8 @@ def postLogin():
 @app.route("/logout")
 def logout():
     response = make_response(redirect("/?status=logout"))
-    if request.cookies.get("session") is not None:
-        response.set_cookie("session", "", expires=0)       # delete cookie
+    if request.cookies.get("user_id") is not None:
+        response.set_cookie("user_id", "", expires=0)       # delete cookie
     else:
         session.pop("user_id", None)
     return response
