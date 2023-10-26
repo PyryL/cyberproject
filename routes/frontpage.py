@@ -2,6 +2,7 @@ from flask import request, render_template, abort, redirect
 from app import app
 from repositories.todos import Todos
 from utilities.session import Session
+from utilities.validation import Validation
 
 @app.route("/")
 def frontpage():
@@ -16,6 +17,8 @@ def frontpage():
         for item in user_todos:
             # this allows injecting HTML code unsanitized to the webpage
             html += f'<li>{item["content"]} <a href="/delete/{item["id"]}">Delete</a></li>'
+        html += '<li><form action="/add-todo" method="POST"><input name="content" placeholder="New todo">'
+        html += '<input type="submit" value="Add"></form></li>'
         html += "</ul>"
     else:
         html += '<a href="/login">Log in</a>'
@@ -25,6 +28,19 @@ def frontpage():
     # return render_template("frontpage.html",
     #     is_logged_in=user_id is not None,
     #     todos=user_todos)
+
+@app.route("/add-todo", methods=["POST"])
+def addTodo():
+    user_id = Session.check_user_id(request)
+    if user_id is None:
+        return abort(401)
+
+    content = request.form.get("content")
+    if not Validation.is_valid_todo_content(content):
+        return abort(400)
+
+    Todos.add_todo(content, user_id)
+    return redirect("/")
 
 @app.route("/delete/<todo_id>")
 def deleteTodo(todo_id: int):

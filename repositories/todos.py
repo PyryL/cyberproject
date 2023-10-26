@@ -27,6 +27,13 @@ class Todos:
         return result[0]
 
     @classmethod
+    def add_todo(cls, content: str, user_id: int):
+        cursor = connection.cursor()
+        sql = "INSERT INTO Todos (user, content) VALUES (?, ?)"
+        cursor.execute(sql, (user_id, content, ))
+        connection.commit()
+
+    @classmethod
     def delete_todo(cls, todo_id: int):
         cursor = connection.cursor()
         sql = "DELETE FROM Todos WHERE id=?"

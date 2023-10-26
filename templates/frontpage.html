@@ -20,6 +20,12 @@
             {% for item in todos %}
             <li>{{ item.content }} <a href="/delete/{{ item.id }}">Delete</a></li>
             {% endfor %}
+            <li>
+                <form action="/add-todo" method="POST">
+                    <input name="content" placeholder="New todo">
+                    <input type="submit" value="Add">
+                </form>
+            </li>
         </ul>
         {% endif %}
     </body>

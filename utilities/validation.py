@@ -25,3 +25,7 @@ class Validation:
                     return False
         
         return True
+
+    @classmethod
+    def is_valid_todo_content(cls, content: str) -> bool:
+        return len(content.strip()) != 0
