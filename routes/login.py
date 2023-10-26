@@ -22,3 +22,12 @@ def postLogin():
     # store user_id in encrypted session that cannot be tampered by the user
     # session["user_id"] = user_id
     # return redirect("/")
+
+@app.route("/logout")
+def logout():
+    response = make_response(redirect("/?status=logout"))
+    if request.cookies.get("session") is not None:
+        response.set_cookie("session", "", expires=0)       # delete cookie
+    else:
+        session.pop("user_id", None)
+    return response

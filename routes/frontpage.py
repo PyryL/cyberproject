@@ -11,6 +11,7 @@ def frontpage():
     # INTENTIONAL VULNERABILITY
     html = "<h1>Todo</h1>"
     if user_id is not None:
+        html += '<p><a href="/logout">Log out</a></p>'
         html += "<b>My todos:</b><ul>"
         for item in user_todos:
             # this allows injecting HTML code unsanitized to the webpage
